@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidLeaderboardEntry(data) {
+      return data.keys().hasAll(['name', 'score', 'timestamp']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 50 &&
+             data.score is int &&
+             data.timestamp is timestamp;
+    }
+
+    match /leaderboard/{entryId} {
+      // Allow anyone to read the leaderboard
+      allow read: if true;
+      
+      // Allow authenticated users to create entries
+      allow create: if isAuthenticated() && isValidLeaderboardEntry(request.resource.data);
+      
+      // No updates or deletes allowed for now to keep it simple and secure
+      allow update, delete: if false;
+    }
+  }
+}

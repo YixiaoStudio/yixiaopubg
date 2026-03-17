@@ -1,0 +1,5 @@
+{
+  "name": "YXPUBG",
+  "description": "一款基于网页的2D顶视角大逃杀游戏，包含缩圈、搜集装备和AI对战功能。",
+  "requestFramePermissions": []
+}
